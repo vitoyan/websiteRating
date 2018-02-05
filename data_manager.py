@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import time
 import os
 import util
+import numpy as np
 
 logger = util.get_log('data_manager')
 
@@ -28,6 +29,11 @@ class DataManager:
             self.base_path = base_path
         else:
             self.base_path = os.getcwd()
+        self.map_category_to_train_number = {}
+        self.map_category_to_valid_number = {}
+        self.category = 0
+        self.train_number = 0
+        self.valid_number = 0
 
     def init_environment(self):            
         self.pages_folder_path = os.path.join(self.base_path, 'pages')
@@ -97,8 +103,12 @@ class DataManager:
         if not self.pages_folder_path or not os.path.exists(self.pages_folder_path):
             return
         
+        self.category = 0
+        self.train_number = 0
+        self.map_category_to_train_number = {}
         for root, dirs, files in os.walk(self.pages_folder_path, topdown=True):
             for name in dirs:
+                self.category = self.category + 1
                 txt_folder_path = os.path.join(self.train_path, name)
                 if os.path.exists(txt_folder_path):
                     util.remove_folder_contents(txt_folder_path)
@@ -106,6 +116,8 @@ class DataManager:
             for name in files:
                 (short_name, extension) = os.path.splitext(name)
                 drive, tail = os.path.split(root)
+                self.train_number = self.train_number + len(files)
+                self.map_category_to_train_number[tail] = len(files)
                 with open(os.path.join(root, name), 'r', encoding = 'utf8') as html:
                     soup = BeautifulSoup(html, "html5lib")
                     text_path = os.path.join(os.path.join(self.train_path, tail), short_name + '.txt')
@@ -117,12 +129,39 @@ class DataManager:
                             txt.write(p.get_text(strip = True))
                         
         logger.info('prepared train data in {}'.format(self.train_path))
+        logger.info('category is {}, train number is {}'.format(self.category, self.train_number))
+
+    def prepare_valid_data(self):
+        if not self.train_path or not os.path.exists(self.train_path):
+            return
+        
+        self.valid_number = 0
+        self.map_category_to_valid_number = {}
+        for root, dirs, files in os.walk(self.train_path, topdown = True):            
+            for name in dirs:
+                category_folder_path = os.path.join(self.valid_path, name)
+                if os.path.exists(category_folder_path):
+                    util.remove_folder_contents(category_folder_path)
+                os.makedirs(category_folder_path)
+            if len(files) > 0:                
+                #random pick 20% as valid samples
+                valid_count = int(len(files) / 5)
+                drive, tail = os.path.split(root)
+                self.valid_number = self.valid_number + valid_count
+                self.map_category_to_valid_number[tail] = len(files)
+                shuf = np.random.permutation(files)
+                for i in range(valid_count):
+                    os.rename(os.path.join(root, shuf[i]), os.path.join(os.path.join(self.valid_path, tail), shuf[i]))
+                    
+        logger.info('prepared valid data in {}'.format(self.valid_path))
+        logger.info('category is {}, valid number is {}'.format(self.category, self.valid_number))
 
 def main(base_path):
-    dm = DataManager(base_path = base_path, pages_folder_path = os.path.join(base_path, 'pages'), train_path = os.path.join(base_path, 'train'))
-    dm.init_environment()
-    dm.get_websites_pages_by_url_files()
-    dm.prepare_train_data()    
+    dm = DataManager(base_path = base_path, pages_folder_path = os.path.join(base_path, 'pages'), train_path = os.path.join(base_path, 'train'), valid_path = os.path.join(base_path, 'valid'))
+    #dm.init_environment()
+    #dm.get_websites_pages_by_url_files()
+    #dm.prepare_train_data()    
+    dm.prepare_valid_data()
 
 if __name__ == '__main__':
     base_path = r'C:\Users\vitoy\Documents\dr'
