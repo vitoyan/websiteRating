@@ -54,9 +54,6 @@ def get_log(log_name, logLevel = logging.DEBUG):
     return logger
     
 
-if __name__ == '__main__':
-    sys.exit(0)
-
 
             
     

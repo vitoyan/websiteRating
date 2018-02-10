@@ -29,6 +29,7 @@ class DataManager:
             self.base_path = base_path
         else:
             self.base_path = os.getcwd()
+        self.map_category_number_to_name = {}
         self.map_category_to_train_number = {}
         self.map_category_to_valid_number = {}
         self.category = 0
@@ -63,8 +64,21 @@ class DataManager:
         
         self.urls_file_names = util.get_all_files(self.urls_folder_path)
         logger.info('init environment')
+    
+    def load_categories_names(self):
+        if not os.path.exists(os.path.join(self.urls_folder_path, 'categories.txt')):
+            logger.error("urls folder categories.txt does not exit in {}".format(self.urls_folder_path))
+            return
         
-    def get_websites_pages_by_url_files(self):
+        with open(os.path.join(self.urls_folder_path, 'categories.txt'), 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                number, name = line.strip().split(':')
+                number = number.strip('"')
+                name = name.strip('"')
+                self.map_category_number_to_name[number] = name
+        
+    def prepare_websites_pages_by_url_files(self):
         firefox_profile = webdriver.FirefoxProfile()
         firefox_profile.set_preference("permissions.default.image", 2)
         firefox_profile.set_preference("javascript.enabled", True)
@@ -130,7 +144,7 @@ class DataManager:
                         
         logger.info('prepared train data in {}'.format(self.train_path))
         logger.info('category is {}, train number is {}'.format(self.category, self.train_number))
-
+        
     def prepare_valid_data(self):
         if not self.train_path or not os.path.exists(self.train_path):
             return
@@ -155,14 +169,8 @@ class DataManager:
                     
         logger.info('prepared valid data in {}'.format(self.valid_path))
         logger.info('category is {}, valid number is {}'.format(self.category, self.valid_number))
+    
 
-def main(base_path):
-    dm = DataManager(base_path = base_path, pages_folder_path = os.path.join(base_path, 'pages'), train_path = os.path.join(base_path, 'train'), valid_path = os.path.join(base_path, 'valid'))
-    #dm.init_environment()
-    #dm.get_websites_pages_by_url_files()
-    #dm.prepare_train_data()    
-    dm.prepare_valid_data()
 
-if __name__ == '__main__':
-    base_path = r'C:\Users\vitoy\Documents\dr'
-    main(base_path)
+    
+
