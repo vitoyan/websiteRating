@@ -73,7 +73,9 @@ class DataManager:
         firefox_profile.set_preference("permissions.default.image", 2)
         firefox_profile.set_preference("javascript.enabled", True)
         firefox_profile.update_preferences()
-        firefox = webdriver.Firefox(firefox_profile)
+        opts = webdriver.FirefoxOptions()
+        opts.add_argument("--headless")
+        firefox = webdriver.Firefox(firefox_profile=firefox_profile, firefox_options=opts)
         firefox.set_page_load_timeout(30)
         
         for url_file_name in self.urls_file_names:
