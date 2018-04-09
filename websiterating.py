@@ -20,11 +20,11 @@ def main(base_path):
     
     
     dm = data_manager.DataManager(base_path = args.b) 
-    if args.i or args.a             
+    if args.i or args.a:             
         dm.init_environment()
-    if args.u or args.a 
+    if args.u or args.a:
         dm.prepare_websites_pages_by_url_files()
-    if args.d or args.a 
+    if args.d or args.a: 
         dm.prepare_train_data()
         dm.prepare_valid_data()
 
