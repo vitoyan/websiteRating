@@ -10,7 +10,7 @@ logger = util.get_log('website_rating')
 
 def main():
     parser = argparse.ArgumentParser(description='Websites Dynamic Rating')
-    parser.add_argument('-b', '--basepath', help='The bath path to store the data set', type=str, required=False, default=str(os.path.jotin(os.path.expanduser('~'), 'dataset')), dest ='basepath')
+    parser.add_argument('-b', '--basepath', help='The bath path to store the data set', type=str, required=False, default=str(os.path.join(os.path.expanduser('~'), 'dataset')), dest ='basepath')
     parser.add_argument('-i', '--init', action='store_true', default=False, dest='init', help='initail environment')
     parser.add_argument('-u', '--pages', action='store_true', default=False, dest='pages', help='prepare pages by url')
     parser.add_argument('-d', '--dataset', action='store_true', default=False, dest='dataset', help='prepare dataset')

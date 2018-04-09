@@ -16,12 +16,12 @@ class DataManager:
     def __init__(self,base_path):
 
         if not base_path:
-            base_path = str(os.path.jotin(os.path.expanduser('~'), 'dataset'))
+            base_path = str(os.path.join(os.path.expanduser('~'), 'dataset'))
 
         self.pages_folder_path = os.path.join(base_path, 'pages')
-        self.train_path = os.path.join(base_path, 'train'),
-        self.valid_path = os.path.join(base_path, 'valid'),
-        self.test_path = os.path.join(base_path, 'test'),
+        self.train_path = os.path.join(base_path, 'train')
+        self.valid_path = os.path.join(base_path, 'valid')
+        self.test_path = os.path.join(base_path, 'test')
         self.urls_folder_path = os.path.join(base_path, 'urls')
         self.map_category_number_to_name = {}
         self.map_category_to_train_number = {}
