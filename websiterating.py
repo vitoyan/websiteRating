@@ -2,6 +2,7 @@ import sys
 import os
 import util
 import pathlib
+import argparse 
 import data_manager
 import website_rating_model
 
@@ -20,11 +21,17 @@ def main():
     
     
     dm = data_manager.DataManager(base_path = args.b) 
-    if args.i or args.a:             
+
+    if args.i or args.a:
+        logger.info("Initail Environment")             
         dm.init_environment()
+
     if args.u or args.a:
+        logger.info("preparing websites pages by url")
         dm.prepare_websites_pages_by_url_files()
-    if args.d or args.a: 
+
+    if args.d or args.a:
+        logger.info("preparing data set")
         dm.prepare_train_data()
         dm.prepare_valid_data()
 
