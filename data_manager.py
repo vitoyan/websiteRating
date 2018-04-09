@@ -16,7 +16,7 @@ class DataManager:
     def __init__(self,base_path):
 
         if not base_path:
-            base_path = str(path(pathlib.Path.home(), 'dataset'))
+            base_path = str(os.path.jotin(os.path.expanduser('~'), 'dataset'))
 
         self.pages_folder_path = os.path.join(base_path, 'pages')
         self.train_path = os.path.join(base_path, 'train'),
