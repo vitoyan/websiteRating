@@ -1,0 +1,7 @@
+# Running pip install -r pre_requirements to satisfy the requirements
+url_normalize>=1.3.3
+selenium>=3.11.0
+bs4>=0.0.1
+numpy>=1.14.2
+sklearn>=0.19.1
+scipy>=1.0.1

@@ -8,7 +8,7 @@ import website_rating_model
 logger = util.get_log('website_rating')
 
 
-def main(base_path):
+def main():
     parser = argparse.ArgumentParser(description='Websites Dynamic Rating')
     parser.add_argument('-b', '--basepath', help='The bath path to store the data set', type=str, required=False, default=str(path(pathlib.Path.home(), 'dataset')))
     parser.add_argument('-i', '--init', action='store_true', default=False, dest='boolean_switch', help='initail environment')
