@@ -13,22 +13,16 @@ logger = util.get_log('data_manager')
 
 class DataManager:
     
-    def __init__(self,
-                 pages_folder_path = '',
-                 train_path = '', 
-                 valid_path = '',
-                 test_path = '',
-                 urls_folder_path = '',
-                 base_path = ''):
-        self.pages_folder_path = pages_folder_path
-        self.train_path = train_path
-        self.valid_path = valid_path
-        self.test_path = test_path
-        self.urls_folder_path = urls_folder_path
-        if base_path:
-            self.base_path = base_path
-        else:
-            self.base_path = os.getcwd()
+    def __init__(self,base_path):
+
+        if not base_path:
+            base_path = str(path(pathlib.Path.home(), 'dataset'))
+
+        self.pages_folder_path = os.path.join(base_path, 'pages')
+        self.train_path = os.path.join(base_path, 'train'),
+        self.valid_path = os.path.join(base_path, 'valid'),
+        self.test_path = os.path.join(base_path, 'test'),
+        self.urls_folder_path = os.path.join(base_path, 'urls')
         self.map_category_number_to_name = {}
         self.map_category_to_train_number = {}
         self.map_category_to_valid_number = {}
@@ -37,27 +31,23 @@ class DataManager:
         self.valid_number = 0
 
     def init_environment(self):            
-        self.pages_folder_path = os.path.join(self.base_path, 'pages')
+        
         if os.path.exists(self.pages_folder_path):
             util.remove_folder_contents(self.pages_folder_path)
         os.makedirs(self.pages_folder_path)
-
-        self.train_path = os.path.join(self.base_path, 'train')
+        
         if os.path.exists(self.train_path):
             util.remove_folder_contents(self.train_path)
         os.makedirs(self.train_path)
         
-        self.valid_path = os.path.join(self.base_path, 'valid')
         if os.path.exists(self.valid_path):
             util.remove_folder_contents(self.valid_path)
         os.makedirs(self.valid_path)
-        
-        self.test_path = os.path.join(self.base_path, 'test')
+                
         if os.path.exists(self.test_path):
             util.remove_folder_contents(self.test_path)
         os.makedirs(self.test_path)
-        
-        self.urls_folder_path = os.path.join(self.base_path, 'urls')
+                
         if not os.path.exists(self.urls_folder_path):
             print('pls provide url files in a folder named urls')
             return

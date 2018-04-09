@@ -1,6 +1,7 @@
 import util
 
 import os
+import pathlib
 from sklearn.datasets import load_files
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -16,12 +17,12 @@ class WebsiteRatingModel:
         if trian_container:
             self.trian_container = trian_container
         else:
-            self.trian_container = os.path.join(os.getcwd(), 'train')
+            self.trian_container = os.path.join(str(pathlib.Path.home()), 'train')
             
         if valid_container:
             self.valid_container = valid_container
         else:
-            self.valid_container = os.path.join(os.getcwd(), 'valid')
+            self.valid_container = os.path.join(str(pathlib.Path.home()), 'valid')
         self.classifier = SGDClassifier
         self.parameter_for_clf = {'loss' : 'hinge', 
                                   'penalty' : 'l2',
