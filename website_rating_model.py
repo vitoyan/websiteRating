@@ -30,7 +30,7 @@ class WebsiteRatingModel:
                                   'random_state' : 42,
                                   'max_iter' : 5, 
                                   'tol' : None}
-        self.model = {}
+        self.models = {}
      
     def load_data(self):
         self.train_data = load_files(self.trian_container)
@@ -68,7 +68,7 @@ class WebsiteRatingModel:
         logger.info('mertics on valid set \n {}'.format(result_metrics))
 
         # store the model
-        self.model['sgd'] = website_clf
+        self.models['sgd'] = website_clf
     
     def SGDClassifier_trian_model(self, parameter_for_clf = '', parameter_for_pip = ''):
         if not parameter_for_clf:
@@ -83,5 +83,7 @@ class WebsiteRatingModel:
             parameter_for_pip = {'tdidf__use_idf': (True, False),
                                  'clf__alpha': (1e-2, 1e-4)}            
         self.train_model(SGDClassifier, parameter_for_clf, parameter_for_pip)
+
+
     
     
