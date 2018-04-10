@@ -12,6 +12,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 
 logger = util.get_log('website_rating_model')
 
@@ -71,7 +72,7 @@ class WebsiteRatingModel:
         logger.info('mertics on valid set \n {}'.format(result_metrics))
 
         # store the model
-        self.models['sgd'] = website_clf
+        return website_clf
     
     def SGDClassifier_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
         if not parameter_for_clf:
@@ -85,7 +86,9 @@ class WebsiteRatingModel:
         if not parameter_for_pip:
             parameter_for_pip = {'tdidf__use_idf': (True, False),
                                  'clf__alpha': (1e-2, 1e-4)}            
-        self.train_model(SGDClassifier, parameter_for_clf, parameter_for_pip)
+        model = self.train_model(SGDClassifier, parameter_for_clf, parameter_for_pip)
+
+        self.models['sgd'] = model
 
 
     def MultinomialNB_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
@@ -95,7 +98,9 @@ class WebsiteRatingModel:
         if not parameter_for_pip:
             parameter_for_pip = {'tdidf__use_idf': (True, False),
                                  'clf__fit_prior': (True, False)}            
-        self.train_model(MultinomialNB, parameter_for_clf, parameter_for_pip)
+        model = self.train_model(MultinomialNB, parameter_for_clf, parameter_for_pip)
+
+        self.models['mnb'] = model
 
 
     def BernoulliNB_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
@@ -105,7 +110,9 @@ class WebsiteRatingModel:
         if not parameter_for_pip:
             parameter_for_pip = {'tdidf__use_idf': (True, False),
                                  'clf__fit_prior': (True, False)}            
-        self.train_model(BernoulliNB, parameter_for_clf, parameter_for_pip)
+        model = self.train_model(BernoulliNB, parameter_for_clf, parameter_for_pip)
+
+        self.models['bnb'] = model
 
     def SVC_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
         if not parameter_for_clf:
@@ -116,7 +123,28 @@ class WebsiteRatingModel:
             parameter_for_pip = {'tdidf__use_idf': (True, False),
                                  'clf__C': (0.1, 1.0, 10),
                                  'clf__kernel':('linear','poly','rbf','sigmoid')}            
-        self.train_model(SVC, parameter_for_clf, parameter_for_pip)
+        model = self.train_model(SVC, parameter_for_clf, parameter_for_pip)
+
+        self.models['svc'] = model
+
+    def DecisionTreeClassifier_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
+        if not parameter_for_clf:
+            parameter_for_clf = {'splitter':'best',
+                                 'max_features ':None,
+                                 'max_depth':None,
+                                 'max_leaf_node':None
+                              }
+
+        if not parameter_for_pip:
+            parameter_for_pip = {'tdidf__use_idf': (True, False),
+                                 'clf__splitter': ('best','random'),
+                                 'clf__max_features':('auto','sqrt','log2',None),
+                                 'clf__max_depth':(None, 10),
+                                 'clf__max_leaf_node':(None, 64,128)
+                                 }            
+        model = self.train_model(DecisionTreeClassifier, parameter_for_clf, parameter_for_pip)
+
+        self.models['dtc'] = model
 
 
     
