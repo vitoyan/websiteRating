@@ -16,6 +16,7 @@ def main():
     parser.add_argument('-d', '--dataset', action='store_true', default=False, dest='dataset', help='prepare dataset')
     parser.add_argument('-a', '--all', action='store_true', default=False, dest='all', help='inital, prepare pages, prepare dataset')
     parser.add_argument('-t', '--train', help='The base path to store the data set', type=str, required=False, default='SGD', dest ='train')
+    parser.add_argument('-T', '--trainall', action='store_true', default=False, dest='trainall', help='train all data with all methods')
 
 
     args = parser.parse_args()
@@ -39,10 +40,22 @@ def main():
     dm.load_categories_names()
     wrm = website_rating_model.WebsiteRatingModel(dm.train_path, dm.valid_path)
     wrm.load_data()
-    
-    if args.train == 'SGD':
+
+    if args.train.upper() == 'SGD' or args.trainall:
         logger.info('training with SGD')
-        wrm.SGDClassifier_trian_model()    
+        wrm.SGDClassifier_train_model()  
+
+    if args.train.upper() == 'MNB' or args.trainall:
+        logger.info('training with MNB')
+        wrm.MultinomialNB_train_model()
+
+    if args.train.upper() == 'BNB' or args.trainall:
+        logger.info('training with BNB')
+        wrm.BernoulliNB_train_model()
+
+    if args.train.upper() == 'SVC' or args.trainall:
+        logger.info('training with SVC')
+        wrm.SVC_train_model()  
 
   
 if __name__ == '__main__':

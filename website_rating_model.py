@@ -9,6 +9,9 @@ from sklearn.pipeline import Pipeline
 from sklearn import metrics
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import SGDClassifier
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.svm import SVC
 
 logger = util.get_log('website_rating_model')
 
@@ -37,17 +40,17 @@ class WebsiteRatingModel:
         self.valid_data = load_files(self.valid_container)
     
     def train_model(self, classifier = '', parameter_for_clf = '', parameter_for_pip = ''):
-        if classifier:
-            self.classifier = classifier
+        if not classifier:
+            classifier = self.classifier 
 
-        if parameter_for_clf:
-            self.parameter_for_clf = parameter_for_clf
+        if not parameter_for_clf:
+            parameter_for_clf = self.parameter_for_clf
         
         website_clf = Pipeline([('vect', CountVectorizer()),
                                      ('tdidf', TfidfTransformer()),
-                                     ('clf', self.classifier(**self.parameter_for_clf))])
+                                     ('clf', classifier(**parameter_for_clf))])
         if parameter_for_pip:
-            self.website_clf = GridSearchCV(website_clf, parameter_for_pip, n_jobs=-1)
+            website_clf = GridSearchCV(website_clf, parameter_for_pip, n_jobs=-1)
         
         website_clf = website_clf.fit(self.train_data.data, self.train_data.target)
 
@@ -70,7 +73,7 @@ class WebsiteRatingModel:
         # store the model
         self.models['sgd'] = website_clf
     
-    def SGDClassifier_trian_model(self, parameter_for_clf = '', parameter_for_pip = ''):
+    def SGDClassifier_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
         if not parameter_for_clf:
             parameter_for_clf = {'loss' : 'hinge', 
                                   'penalty' : 'l2',
@@ -85,5 +88,35 @@ class WebsiteRatingModel:
         self.train_model(SGDClassifier, parameter_for_clf, parameter_for_pip)
 
 
-    
+    def MultinomialNB_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
+        if not parameter_for_clf:
+            parameter_for_clf = {'fit_prior' : 'false'}
+
+        if not parameter_for_pip:
+            parameter_for_pip = {'tdidf__use_idf': (True, False),
+                                 'clf__fit_prior': (True, False)}            
+        self.train_model(MultinomialNB, parameter_for_clf, parameter_for_pip)
+
+
+    def BernoulliNB_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
+        if not parameter_for_clf:
+            parameter_for_clf = {'fit_prior' : 'false'}
+
+        if not parameter_for_pip:
+            parameter_for_pip = {'tdidf__use_idf': (True, False),
+                                 'clf__fit_prior': (True, False)}            
+        self.train_model(BernoulliNB, parameter_for_clf, parameter_for_pip)
+
+    def SVC_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
+        if not parameter_for_clf:
+            parameter_for_clf = {'C' : 1.0,
+                                'kernel': 'rbf'}
+
+        if not parameter_for_pip:
+            parameter_for_pip = {'tdidf__use_idf': (True, False),
+                                 'clf__C': (0.1, 1.0, 10),
+                                 'clf__kernel':('linear','poly','rbf','sigmoid')}            
+        self.train_model(SVC, parameter_for_clf, parameter_for_pip)
+
+
     
