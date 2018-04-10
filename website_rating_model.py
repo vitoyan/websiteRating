@@ -30,6 +30,7 @@ class WebsiteRatingModel:
                                   'random_state' : 42,
                                   'max_iter' : 5, 
                                   'tol' : None}
+        self.model = {}
      
     def load_data(self):
         self.train_data = load_files(self.trian_container)
@@ -38,27 +39,36 @@ class WebsiteRatingModel:
     def train_model(self, classifier = '', parameter_for_clf = '', parameter_for_pip = ''):
         if classifier:
             self.classifier = classifier
-        else:
-            logger.error('pls set classifier')
+
         if parameter_for_clf:
             self.parameter_for_clf = parameter_for_clf
-        else:
-            logger.error('pls set parameter_for_clf')
         
-        self.website_clf = Pipeline([('vect', CountVectorizer()),
+        website_clf = Pipeline([('vect', CountVectorizer()),
                                      ('tdidf', TfidfTransformer()),
                                      ('clf', self.classifier(**self.parameter_for_clf))])
         if parameter_for_pip:
-            self.website_clf = GridSearchCV(self.website_clf, parameter_for_pip, n_jobs=-1)
+            self.website_clf = GridSearchCV(website_clf, parameter_for_pip, n_jobs=-1)
         
-        self.website_clf = self.website_clf.fit(self.train_data.data, self.train_data.target)
+        website_clf = website_clf.fit(self.train_data.data, self.train_data.target)
+
+        # predict on train set
+        train_predicted = website_clf.predict(self.train_data.data)
         
-        valid_predicted = self.website_clf.predict(self.valid_data.data)
+        result_metrics = metrics.classification_report(self.train_data.target, train_predicted,
+                                                    target_names=self.train_data.target_names)
+        
+        logger.info('mertics on train set \n {}'.format(result_metrics))
+
+        # predict on valid set        
+        valid_predicted = website_clf.predict(self.valid_data.data)
         
         result_metrics = metrics.classification_report(self.valid_data.target, valid_predicted,
                                                     target_names=self.valid_data.target_names)
         
-        logger.info('{}'.format(result_metrics))
+        logger.info('mertics on valid set \n {}'.format(result_metrics))
+
+        # store the model
+        self.model['sgd'] = website_clf
     
     def SGDClassifier_trian_model(self, parameter_for_clf = '', parameter_for_pip = ''):
         if not parameter_for_clf:
