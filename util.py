@@ -52,7 +52,7 @@ def get_log(log_name, logLevel = logging.DEBUG):
     logger.addHandler(ch)
 
     consoleHandler = logging.StreamHandler()
-    consoleHandler.setFormatter(logFormatter)
+    consoleHandler.setFormatter(formatter)
     logger.addHandler(consoleHandler)
     
     return logger
