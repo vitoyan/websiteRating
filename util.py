@@ -50,6 +50,10 @@ def get_log(log_name, logLevel = logging.DEBUG):
 
     # add ch to logger
     logger.addHandler(ch)
+
+    consoleHandler = logging.StreamHandler()
+    consoleHandler.setFormatter(logFormatter)
+    logger.addHandler(consoleHandler)
     
     return logger
     

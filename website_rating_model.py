@@ -38,8 +38,12 @@ class WebsiteRatingModel:
     def train_model(self, classifier = '', parameter_for_clf = '', parameter_for_pip = ''):
         if classifier:
             self.classifier = classifier
+        else:
+            logger.error('pls set classifier')
         if parameter_for_clf:
             self.parameter_for_clf = parameter_for_clf
+        else:
+            logger.error('pls set parameter_for_clf')
         
         self.website_clf = Pipeline([('vect', CountVectorizer()),
                                      ('tdidf', TfidfTransformer()),
@@ -55,7 +59,6 @@ class WebsiteRatingModel:
                                                     target_names=self.valid_data.target_names)
         
         logger.info('{}'.format(result_metrics))
-        print('{}'.format(result_metrics))
     
     def SGDClassifier_trian_model(self, parameter_for_clf = '', parameter_for_pip = ''):
         if not parameter_for_clf:
