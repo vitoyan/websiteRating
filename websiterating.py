@@ -46,7 +46,7 @@ def main():
         logger.info('training with SGD')
         wrm.SGDClassifier_train_model()  
 
-    if args.train.upper() == 'MNB' or args.trainallor or args.all:
+    if args.train.upper() == 'MNB' or args.trainall or args.all:
         logger.info('training with MNB')
         wrm.MultinomialNB_train_model()
 
