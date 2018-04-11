@@ -119,10 +119,10 @@ class DataManager:
                 if os.path.exists(txt_folder_path):
                     util.remove_folder_contents(txt_folder_path)
                 os.makedirs(txt_folder_path)
+            self.train_number = self.train_number + len(files)
             for name in files:
                 (short_name, extension) = os.path.splitext(name)
-                drive, tail = os.path.split(root)
-                self.train_number = self.train_number + len(files)
+                drive, tail = os.path.split(root)                
                 self.map_category_to_train_number[tail] = len(files)
                 with open(os.path.join(root, name), 'r', encoding = 'utf8') as html:
                     soup = BeautifulSoup(html, "html5lib")

@@ -57,7 +57,7 @@ def main():
         logger.info('training with SVC')
         wrm.SVC_train_model()
 
-     if args.train.upper() == 'DTC' or args.trainall:
+    if args.train.upper() == 'DTC' or args.trainall:
         logger.info('training with dtc')
         wrm.DecisionTreeClassifier_train_model()  
 
