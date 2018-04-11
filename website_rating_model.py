@@ -130,9 +130,9 @@ class WebsiteRatingModel:
     def DecisionTreeClassifier_train_model(self, parameter_for_clf = '', parameter_for_pip = ''):
         if not parameter_for_clf:
             parameter_for_clf = {'splitter':'best',
-                                 'max_features ':None,
+                                 'max_features':None,
                                  'max_depth':None,
-                                 'max_leaf_node':None
+                                 'max_leaf_nodes':None
                               }
 
         if not parameter_for_pip:
@@ -140,7 +140,7 @@ class WebsiteRatingModel:
                                  'clf__splitter': ('best','random'),
                                  'clf__max_features':('auto','sqrt','log2',None),
                                  'clf__max_depth':(None, 10),
-                                 'clf__max_leaf_node':(None, 64,128)
+                                 'clf__max_leaf_nodes':(None, 64,128)
                                  }            
         model = self.train_model(DecisionTreeClassifier, parameter_for_clf, parameter_for_pip)
 
